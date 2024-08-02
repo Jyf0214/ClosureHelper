@@ -1,16 +1,36 @@
-name: Android CI
+name: Build and Package
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - main  # 可以根据需要调整触发构建的分支
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # 使用最新版本的 Ubuntu
 
     steps:
-    - name: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3  # 检出代码到工作目录
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'  # 设定 JDK 版本，根据你的项目要求调整
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        run: ./gradlew assembleRelease  # 使用 Gradle Wrapper 执行构建任务
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release
+          path: app/build/outputs/apk/release/  # 上传构建产物，根据你的项目路径调整
