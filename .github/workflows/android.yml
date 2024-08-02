@@ -3,20 +3,20 @@ name: Build and Package
 on:
   push:
     branches:
-      - main  # 可以根据需要调整触发构建的分支
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # 使用最新版本的 Ubuntu
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # 检出代码到工作目录
+        uses: actions/checkout@v3
 
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '11'  # 设定 JDK 版本，根据你的项目要求调整
+          java-version: '11'  # 根据需要调整 JDK 版本
 
       - name: Cache Gradle packages
         uses: actions/cache@v3
@@ -27,10 +27,10 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew assembleRelease  # 使用 Gradle Wrapper 执行构建任务
+        run: ./gradlew assembleRelease
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: app-release
-          path: app/build/outputs/apk/release/  # 上传构建产物，根据你的项目路径调整
+          path: app/build/outputs/apk/release/
