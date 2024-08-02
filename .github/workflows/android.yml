@@ -16,21 +16,9 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '11'  # 根据需要调整 JDK 版本
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          java-version: '11'
 
       - name: Build with Gradle
-        run: ./gradlew assembleRelease
-
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: gradle/gradle-build-action@v2
         with:
-          name: app-release
-          path: app/build/outputs/apk/release/
+          arguments: 'assembleRelease'
